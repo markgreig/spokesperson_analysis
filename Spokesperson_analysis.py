@@ -2,6 +2,8 @@
 # coding: utf-8
 
 # In[2]:
+import subprocess
+subprocess.call(['pip', 'install', '-r', 'requirements.txt'])
 
 import streamlit as st
 
