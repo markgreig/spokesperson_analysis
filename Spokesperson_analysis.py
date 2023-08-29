@@ -3,6 +3,9 @@
 
 # In[2]:
 
+import streamlit as st
+
+st.title('My App') 
 
 pip install pyperclip
 
@@ -44,7 +47,21 @@ writer = pd.ExcelWriter('top_spokespeople.xlsx')
 result.to_excel(writer)
 writer.save()
 
+@st.cache
+def convert_df(df):
+     return df.to_csv().encode('utf-8')
 
+csv = convert_df(df)
+
+st.download_button(
+     label="Download data as CSV",
+     data=csv,
+     file_name='data.csv',
+     mime='text/csv',
+ )
+
+if __name__ == '__main__':
+    main()
 # In[ ]:
 
 
