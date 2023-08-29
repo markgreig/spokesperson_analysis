@@ -1,56 +1,72 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[ ]:
+
+
 import re
 import streamlit as st
-
-st.title('My App') 
-
-
 import pandas as pd
 
+st.title('My App')
+
+# Function to clean and process the clipboard data
+def process_clipboard_data(clipboard_data):
+    # Split the clipboard data into lines
+    lines = clipboard_data.strip().split('\n')
+
+    # Initialize a list to store cleaned and split data
+    cleaned_data = []
+
+    # Regular expression pattern to match spokesperson and frequency
+    pattern = r'(.+?)\s+(\d+)'
+
+    for line in lines:
+        match = re.match(pattern, line)
+        if match:
+            spokesperson = match.group(1)
+            frequency = int(match.group(2))
+
+            # Clean and split spokespersons by '|'
+            spokespeople = [name.strip() for name in spokesperson.split('|')]
+
+            # Append each cleaned entry to the list
+            for person in spokespeople:
+                cleaned_data.append([person, frequency])
+
+    # Create a DataFrame from the cleaned data
+    df = pd.DataFrame(cleaned_data, columns=['Spokesperson', 'Frequency'])
+
+    return df
+
+# Get the text from the clipboard
 text = st.text_input("Paste text here")
 
-# Extract rows
-rows = re.findall(r'([^\d]+ [\d\w]+ [^\d]+)\s(\d+)', text)
+# Process clipboard data
+if text:
+    df = process_clipboard_data(text)
 
-# Split spokesperson column 
-data = []
-for row in rows:
-  spokesperson = row[0].strip()
-  spokespeople = spokesperson.split('|')
-  spokespeople = [name.strip() for name in spokespeople]
-  frequency = int(row[1])
-  
-  for spokesperson in spokespeople:
-    data.append([spokesperson, frequency])
+    # Group by Spokesperson and calculate the sum of Frequency
+    result = df.groupby('Spokesperson')['Frequency'].sum().reset_index()
 
-# Create dataframe  
-df = pd.DataFrame(data, columns=['Spokesperson', 'Frequency'])
+    # Sort by Frequency in descending order
+    result = result.sort_values(by='Frequency', ascending=False)
 
-# Group by Spokesperson and calculate the sum of Frequency
-result = df.groupby('Spokesperson')['Frequency'].sum().reset_index()
+    st.write(result)
 
-# Sort by Frequency in descending order
-result = result.sort_values(by='Frequency', ascending=False)
+    # Provide a download link for the data as CSV
+    @st.cache
+    def convert_df(result):
+        return result.to_csv(index=False).encode('utf-8')
 
-result.to_csv('top_spokespeople.csv', index=False)
+    csv = convert_df(result)
 
-
-@st.cache
-def convert_df(result):
-     return result.to_csv().encode('utf-8')
-
-csv = convert_df(result)
-
-st.download_button(
-     label="Download data as CSV",
-     data=csv,
-     file_name='top_spokespeople.csv',
-     mime='text/csv',
- )
-
+    st.download_button(
+         label="Download data as CSV",
+         data=csv,
+         file_name='top_spokespeople.csv',
+         mime='text/csv',
+     )
 # In[ ]:
 
 
