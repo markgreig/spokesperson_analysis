@@ -7,12 +7,6 @@ import streamlit as st
 
 st.title('My App') 
 
-pip install pyperclip
-
-
-# In[3]:
-
-
 import pyperclip
 import pandas as pd
 
