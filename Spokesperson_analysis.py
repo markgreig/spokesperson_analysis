@@ -2,21 +2,18 @@
 # coding: utf-8
 
 # In[2]:
-import subprocess
-subprocess.call(['pip', 'install', '-r', 'requirements.txt'])
 
 import streamlit as st
 
 st.title('My App') 
 
-import pyperclip
+
 import pandas as pd
 
-# Get the text from the clipboard
-clipboard_data = pyperclip.paste()
+text = st.text_input("Paste text here")
 
 # Split the clipboard data into rows based on newline character ('\n')
-rows = clipboard_data.strip().split('\n')
+rows = text.strip().split('\n')
 
 # Split each row into columns based on tabs ('\t')
 data = [row.split('\t') for row in rows]
