@@ -18,14 +18,13 @@ def process_clipboard_data(clipboard_data):
     # Initialize a list to store cleaned and split data
     cleaned_data = []
 
-    # Regular expression pattern to match spokesperson and frequency
-    pattern = r'(.+?)\s+(\d+)'
-
     for line in lines:
-        match = re.match(pattern, line)
-        if match:
-            spokesperson = match.group(1)
-            frequency = int(match.group(2))
+        # Split each line by tabs or spaces to separate the spokesperson and frequency
+        parts = re.split(r'\t|\s{2,}', line.strip())
+
+        if len(parts) >= 2:
+            spokesperson = parts[0]
+            frequency = int(parts[-1])
 
             # Clean and split spokespersons by '|'
             spokespeople = [name.strip() for name in spokesperson.split('|')]
@@ -67,6 +66,7 @@ if text:
          file_name='top_spokespeople.csv',
          mime='text/csv',
      )
+
 # In[ ]:
 
 
