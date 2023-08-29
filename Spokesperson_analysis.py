@@ -43,20 +43,19 @@ result = df.groupby('Spokesperson')['Frequency'].sum().reset_index()
 # Sort by Frequency in descending order
 result = result.sort_values(by='Frequency', ascending=False)
 
-writer = pd.ExcelWriter('top_spokespeople.xlsx')
-result.to_excel(writer)
-writer.save()
+result.to_csv('top_spokespeople.csv')
+
 
 @st.cache
-def convert_df(df):
-     return df.to_csv().encode('utf-8')
+def convert_df(result):
+     return result.to_csv().encode('utf-8')
 
-csv = convert_df(df)
+csv = convert_df(result)
 
 st.download_button(
      label="Download data as CSV",
      data=csv,
-     file_name='data.csv',
+     file_name='top_spokespeople.csv',
      mime='text/csv',
  )
 
