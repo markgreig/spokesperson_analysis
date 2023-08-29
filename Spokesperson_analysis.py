@@ -18,7 +18,9 @@ rows = re.findall(r'([^\d]+ [\d\w]+ [^\d]+)\s(\d+)', text)
 # Split spokesperson column 
 data = []
 for row in rows:
-  spokespeople = row[0].split('|')
+  spokesperson = row[0].strip()
+  spokespeople = spokesperson.split('|')
+  spokespeople = [name.strip() for name in spokespeople]
   frequency = int(row[1])
   
   for spokesperson in spokespeople:
