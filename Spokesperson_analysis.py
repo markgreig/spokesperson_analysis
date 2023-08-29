@@ -35,7 +35,7 @@ result = df.groupby('Spokesperson')['Frequency'].sum().reset_index()
 # Sort by Frequency in descending order
 result = result.sort_values(by='Frequency', ascending=False)
 
-result.to_csv('top_spokespeople.csv')
+result.to_csv('top_spokespeople.csv', index=False)
 
 
 @st.cache
