@@ -2,15 +2,12 @@
 # coding: utf-8
 
 # In[ ]:
-
-
-import re
 import streamlit as st
 import pandas as pd
 
 st.title('My App')
 
-# Function to clean and process the clipboard data
+# Function to process the clipboard data
 def process_clipboard_data(clipboard_data):
     # Split the clipboard data into lines
     lines = clipboard_data.strip().split('\n')
@@ -19,12 +16,12 @@ def process_clipboard_data(clipboard_data):
     cleaned_data = []
 
     for line in lines:
-        # Split each line by tabs or spaces to separate the spokesperson and frequency
-        parts = re.split(r'\t|\s{2,}', line.strip())
+        # Split each line by multiple spaces or tabs
+        parts = line.strip().split()
 
         if len(parts) >= 2:
-            spokesperson = parts[0]
             frequency = int(parts[-1])
+            spokesperson = ' '.join(parts[:-1])
 
             # Clean and split spokespersons by '|'
             spokespeople = [name.strip() for name in spokesperson.split('|')]
