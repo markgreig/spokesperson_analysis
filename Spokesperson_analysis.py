@@ -12,25 +12,20 @@ import pandas as pd
 
 text = st.text_input("Paste text here")
 
-# Extract each row based on name and number pattern
+# Extract rows
 rows = re.findall(r'([^\d]+ [\d\w]+ [^\d]+)\s(\d+)', text)
 
-# Split into columns 
-data = [row[0].split(' ') + [row[1]] for row in rows]
+# Split spokesperson column 
+data = []
+for row in rows:
+  spokespeople = row[0].split('|')
+  frequency = int(row[1])
+  
+  for spokesperson in spokespeople:
+    data.append([spokesperson, frequency])
 
-# data is now a list of lists containing each row
-
-# Create a DataFrame from the data
+# Create dataframe  
 df = pd.DataFrame(data, columns=['Spokesperson', 'Frequency'])
-
-# Convert the 'Frequency' column to integers
-df['Frequency'] = df['Frequency'].astype(int)
-
-# Split and explode the Spokesperson column
-df['Spokesperson'] = df['Spokesperson'].str.split('|')
-
-# Explode the Spokesperson column to create one row per Spokesperson
-df = df.explode('Spokesperson')
 
 # Group by Spokesperson and calculate the sum of Frequency
 result = df.groupby('Spokesperson')['Frequency'].sum().reset_index()
