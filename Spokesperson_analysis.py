@@ -12,11 +12,13 @@ import pandas as pd
 
 text = st.text_input("Paste text here")
 
-# Split the clipboard data into rows based on newline character ('\n')
-rows = text.strip().split('\n')
+# Extract each row based on name and number pattern
+rows = re.findall(r'([^\d]+ [\d\w]+ [^\d]+)\s(\d+)', text)
 
-# Split each row into columns based on tabs ('\t')
-data = [row.split('\t') for row in rows]
+# Split into columns 
+data = [row[0].split(' ') + [row[1]] for row in rows]
+
+# data is now a list of lists containing each row
 
 # Create a DataFrame from the data
 df = pd.DataFrame(data, columns=['Spokesperson', 'Frequency'])
