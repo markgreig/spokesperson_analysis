@@ -6,28 +6,27 @@ import re
 import pandas as pd
 import streamlit as st
 
-text = "NAME1 NAME2 10 \nNAME3|NAME4|NAME5 15"
+text = "NAME1 NAME2 10 \nNAME3|NAME4|NAME5 15\nNAME NAME 10\nNAME NAME NAME NAME 15"
 
-# Phase 1 - split rows on '|'
-rows = []
-for line in text.split('\n'):
-    if '|' in line:
-        names = line.split('|')
-        for name in names:
-            rows.append(name)
-    else:
-        rows.append(line)
+# Phase 1 - split rows on '\n'
+rows = text.split('\n')
 
 # Phase 2 - extract names and numbers
 pattern = '(.+?) (\d+)'
 
 data = []
+
 for row in rows:
-    matches = re.findall(pattern, row)
-    for match in matches:
-        name = match[0]
-        number = int(match[1])  # Convert the frequency to an integer
-        data.append([name, number])
+    if '|' in row:
+        match = re.search(pattern, row)
+        if match:
+            name = match.group(1)
+            number = int(match.group(2))
+            data.append([name, number])
+    else:
+        names = row.split()
+        for name in names[:-1]:
+            data.append([name, int(names[-1])])
 
 # Create a DataFrame
 df = pd.DataFrame(data, columns=['Spokesperson', 'Frequency'])
@@ -54,7 +53,6 @@ st.download_button(
     file_name='top_spokespeople.csv',
     mime='text/csv',
 )
-
 # In[ ]:
 
 
