@@ -19,7 +19,7 @@ for line in text.split('\n'):
         rows.append(line)
 
 # Phase 2 - extract names and numbers
-pattern = '(\w+ \w+) (\d+)'
+pattern = '(.+?) (\d+)'
 
 data = []
 for row in rows:
