@@ -6,7 +6,7 @@ import re
 import pandas as pd
 import streamlit as st
 
-text = "NAME1 NAME2 10 \nNAME3|NAME4|NAME5 15\nNAME NAME 10\nNAME NAME NAME NAME 15"
+text = st.text_input("Paste text here")
 
 # Phase 1 - split rows on '\n'
 rows = text.split('\n')
