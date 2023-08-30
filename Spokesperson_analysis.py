@@ -3,24 +3,34 @@
 
 # In[ ]:
 import re
-import streamlit as st
 import pandas as pd
 
-text = st.text_input("Paste text")
+text = "NAME1 NAME2 10 \nNAME3|NAME4|NAME5 15"
 
-rows = re.findall(r'([^\d]+ [\d\w]+ [^\d]+)\s(\d+)', text)
+# Phase 1 - split rows on '|'
+rows = [] 
+for line in text.split('\n'):
+  if '|' in line:
+    names = line.split('|')
+    for name in names:
+      rows.append(name)
+  else:
+    rows.append(line)
+
+print(rows)
+# ['NAME1 NAME2 10', 'NAME3', 'NAME4', 'NAME5 15']
+
+# Phase 2 - extract names and number 
+pattern = '(\w+ \w+) (\d+)'
 
 data = []
-
 for row in rows:
-  spokesperson = row[0].strip()
-  spokespeople = spokesperson.split('|')
-  spokespeople = [name.strip() for name in spokespeople]
-  
-  frequency = int(row[1])
-  
-  for spokesperson in spokespeople:
-    data.append([spokesperson, frequency])
+  match = re.search(pattern, row)
+  if match:
+    name = match.group(1)
+    number = match.group(2)  
+    data.append([name, number])
+
     
 df = pd.DataFrame(data, columns=['Spokesperson', 'Frequency'])
 
