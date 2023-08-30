@@ -21,13 +21,13 @@ print(rows)
 # ['NAME1 NAME2 10', 'NAME3', 'NAME4', 'NAME5 15']
 
 # Phase 2 - extract names and number 
-pattern = '(\w+ \w+) (\d+)'
+pattern = '([\w ]+) (\d+)'
 
 data = []
 for row in rows:
   match = re.search(pattern, row)
   if match:
-    name = match.group(1)
+    name = ' '.join(match.group(1).split())
     number = match.group(2)  
     data.append([name, number])
 
